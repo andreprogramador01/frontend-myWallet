@@ -2,18 +2,20 @@ import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import axios from 'axios'
+import { useForm } from "react-hook-form";
 
 export default function NovaEntrada(props) {
     const navegacao = useNavigate()
     const [valor, setValor] = useState()
     const [descricao, setDescricao] = useState()
     const [tipo, setTipo] = useState("entrada")
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
     useEffect(()=>{
         if(!props.token){
             navegacao('/')
         }
     }, [])
-
+    
     function enviarEntrada(e) {
         e.preventDefault()
         
@@ -37,7 +39,8 @@ export default function NovaEntrada(props) {
                 Nova entrada
             </Titulo>
             <Form onSubmit={enviarEntrada}>
-                <Input type="text" placeholder="Valor" value={valor} onChange={e => setValor(e.target.value)} />
+                <Input {...register("valor", { required: true })} type="text" placeholder="Valor" value={valor} onChange={e => setValor(e.target.value)} />
+                {errors.valor && <span>This field is required</span>}
                 <Input type="text" placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} />
                 <InputSub type="submit" value="Salvar entrada" />
             </Form>

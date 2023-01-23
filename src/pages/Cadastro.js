@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import axios from 'axios'
 
@@ -8,12 +8,13 @@ export default function Login() {
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
     const [confirmaSenha, setConfirmaSenha] = useState("")
+    const navegacao = useNavigate()
 
     function cadastrarUsuario(e) {
         e.preventDefault()
         const usuario = { name: nome, email, password: senha, confirmPassword: confirmaSenha }
         axios.post(process.env.REACT_APP_API_URL + '/cadastro', usuario)
-            .then(res => console.log(res.data))
+            .then(res => navegacao('/'))
             .catch(err => {
                 console.log(err.response.data)
             })

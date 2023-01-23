@@ -6,9 +6,9 @@ import axios from 'axios'
 export default function Home(props) {
     const [arrayTransacoes, setArrayTransacoes] = useState()
     const [soma, setSoma] = useState()
-    const [user,setUser] = useState()
+    const [user, setUser] = useState()
     const navegacao = useNavigate()
-    if(!props.token){
+    if (!props.token) {
         navegacao('/')
     }
     const config = {
@@ -17,14 +17,14 @@ export default function Home(props) {
         }
     }
     const body = {}
-    
+
     useEffect(() => {
-        if(!props.token){
+        if (!props.token) {
             navegacao('/')
         }
         axios.post(process.env.REACT_APP_API_URL + '/todas-transacoes', body, config)
             .then(res => {
-               
+
                 setArrayTransacoes(res.data.transacoes)
                 setUser(res.data.user)
                 console.log(res.data.user)
@@ -32,11 +32,11 @@ export default function Home(props) {
             .catch(err => console.log(err))
     }, [])
 
-    function deslogar(e){
+    function deslogar(e) {
         props.setToken("")
         console.log(props.token)
     }
-   
+
     return <HomeContainer>
         <DivTopo>
             <p>Olá, {(user) && user.name.split(" ")[0]}</p><Link onClick={deslogar} to="/"><ion-icon style={{ color: "#FFFFFF", fontSize: "24px" }} name="exit-outline"></ion-icon></Link>
@@ -45,10 +45,10 @@ export default function Home(props) {
             <div>Não há registros de
                 entrada ou saída</div>
         </DivCentro>) : (<DivTransacoes>
-            {arrayTransacoes.map(t => <div><p style={{paddingRight:"10px"}}>{t.date}</p><p style={{ marginRight: "auto",color: "#000000" }}>{t.description}</p><p style={{ color: t.value > 0 ? "#03AC00" : "#C70000" }}>{Number(t.value).toFixed(2).replace('.', ',')}</p></div>)}
+            {arrayTransacoes.map(t => <div><p style={{ paddingRight: "10px" }}>{t.date}</p><p style={{ marginRight: "auto", color: "#000000" }}>{t.description}</p><p style={{ color: t.value > 0 ? "#03AC00" : "#C70000" }}>{Number(t.value).toFixed(2).replace('.', ',')}</p></div>)}
             <DivSaldo>
                 {(arrayTransacoes.length > 0) &&
-                    <div><p style={{color: "#000000"}}>SALDO</p><p style={{color: (arrayTransacoes.map(t => t.value).reduce((somaParcial, value) => Number(somaParcial) + Number(value), 0)>0) ? "#03AC00" : "#C70000"}}>{arrayTransacoes.map(t => t.value).reduce((somaParcial, value) => Number(somaParcial) + Number(value), 0).toFixed(2).replace('.', ',')}</p></div>
+                    <div><p style={{ color: "#000000" }}>SALDO</p><p style={{ color: (arrayTransacoes.map(t => t.value).reduce((somaParcial, value) => Number(somaParcial) + Number(value), 0) > 0) ? "#03AC00" : "#C70000" }}>{arrayTransacoes.map(t => t.value).reduce((somaParcial, value) => Number(somaParcial) + Number(value), 0).toFixed(2).replace('.', ',')}</p></div>
                 }
             </DivSaldo>
         </DivTransacoes>)}
